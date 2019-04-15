@@ -92,3 +92,39 @@
 ### Determining Partitions
 - Spark talks with the distributed filesystem (like HDFS) to figure out how the data is chunked in order to determine how many partitions to make.
 
+## Scala Basics
+```
+object HelloWorld extends App {
+  println("Hello Pittsburgh")
+}
+```
+- For Scala, that's all you need to know to run a basic program.
+- Java is more complicated because you would have to do introduce a `main` method. That's why Scala is the second easiest language for beginners to learn (after Python).
+
+```
+case class Person(id: Long, name: String)
+```
+- The following ways of creating a new instance of `Person` are equivalent:
+```
+new Person(0, "BJ")
+Person(0, "BJ")
+Person.apply(0, "BJ")
+```
+
+### A Simple Spark Application
+```
+import org.apache.spark.sql.SparkSession
+
+object HelloWorld extends App {
+  val file = if (args.length > 0) args(0) else "build.sbt"
+  val spark = SparkSession
+    .builder
+    .master("local[*]")
+    .getOrCreate
+  spark
+    .read
+    .option("header", true)
+    .csv(file)
+    .show(truncate = false)
+```
+- To create a Spark application, you don't necessarily have to read multiple books on Scala.
