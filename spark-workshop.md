@@ -128,3 +128,33 @@ object HelloWorld extends App {
     .show(truncate = false)
 ```
 - To create a Spark application, you don't necessarily have to read multiple books on Scala.
+
+## Spark SQL
+### Spark Hierarchy
+- Apache Spark, Apache Hadoop - both umbrella projects
+- Apache Hadoop
+  - HDFS
+  - YARN
+  - MapReduce - basically gone, now Apache Spark
+- The only thing Apache Spark was aimed at improving was MapReduce
+- Apache Spark (basically MapReduce++)
+  - Spark Core: The main abstraction is RDD API
+  - Spark SQL: The main abstraction is Dataset
+  - Spark Structured Streaming: The main abstraction is Dataset
+  - Spark MlLib: The main abstraction is a pipeline
+- Is Spark a relational database? No, its missing persistence/storage
+- Spark + HDFS = database
+
+### Introduction to Spark SQL
+- `SparkSession` is the entrypoint to Spark SQL (and Spark in general these days)
+- Load datasets using `SparkSession.read`
+- Write datasets using `Dataset.write`
+- Loading and writing operators create source and sink nodes in a data flow graph
+- Spark SQL provides a high level API for doing distributed computations
+- Always specify the schema of your data - otherwise the `load` operation becomes an action to infer the schema
+  - When you provide the schema, there is no action to be done. Thus, there is no entry for the job on the UI.
+- Spark always nulls all the incorrect values (based on the provided schema)
+- Ad-hoc local dataset commands
+  - `Seq(...).toDF("col1", "col2", ...)
+  - `Seq(...).toDS(...)
+  - Local because you created the sequence locally so that data is already in memory
