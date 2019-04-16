@@ -70,6 +70,20 @@ object MyApp extends App {
 ------------+----------+-------------------+---------------------+
 # executors | 1 driver | 1 executor/worker | 2                   |
 ```
+- Your algorithm determines how many tasks you will ultimately create.
+  - Have a test run and check performance. If performance is okay, note how many tasks were created and how many executors/cores were used. You can then use these numbers to determine how many resources to give to Spark.
+  - Every executor requires its own JVM.
+  - The more tasks an executor processes => the more cores that executor needs => the more memory JVM needs.
+    - Scale up the number of executors so that the memory belonging to one JVM is not too large.
+  - Spark supports dynamic allocation of executors (disabled by default).
+    - Disabled by default because it seemed to be not that useful in most cases. Adds extra variable of nondeterminism.
+- **Adaptive Query Execution** - look this up
+- When you allocate memory for a new executor, that memory is for JVM (not the data).
+  - If the data could be fit into memory, you would not be using Spark.
+- Dynamic Allocation of Executors
+  - You can set a minimum number of executors
+  - Spark takes a look at the queue of tasks and creates more executors if needed
+- Executors are only there to execute tasks.
 
 ### Running Spark Standalone with Kubernetes
 - Only Java11 supports dockerized Java applications
@@ -130,3 +144,39 @@ res2: org.apache.spark.sql.Column = id
 - A **job** is made up of actions on one or more partitions. Spark will not create jobs for 0 partitions.
 - After you perform an action on a RDD, a Job is created. This leads to a **Stage**, which contains **tasks** for the action on every partition. (Remember, partitions and tasks are always 1 to 1.)
 - If two sequential RDDs share the same partitioner and the same number of partitions, then the resulting tasks can be combined into one stage.
+
+## Functions
+
+### Standard Functions
+- `import org.apache.spark.sql.functions._`
+- You should try to use as many standard functions as possible before you create your own. Because Spark controls what standard functions do while custom functions cannot be optimized by Spark.
+- In Spark 2.4, there are brand new standard functions for "Array Algebra" and "Map Algebra".
+
+### User Defined Functions
+- It is very difficult to optimized user defined functions.
+- UDFs are a blackbox for Spark Optimizer and does *not even try* to optimize them.
+```
+// pure Scala function
+val myUpperFn = (input: String) => input.toUpperCase
+
+// user-defined function
+val myUpper = udf(myUpperFn)
+```
+- Use UDFs as standard functions (even though they are not).
+- Really really just stay away from UDFs.
+- When using UDFs, you need to `DeserializeObject` in order to bring the data into memory.
+- Register your UDFs with Spark:
+```
+//pure Scala function
+val myUpperFn = (input: String) => input.toUpperCase
+
+// register Scala function as UDF
+spark.udf.register("myUpper", myUpperFn)
+
+// Use myUpper as if it were a standard function
+sql("select myUpper(name) from people").show
+```
+- UDFs are **deterministic** by default.
+  - You can check whether a function is determinstic or not.
+  - Use **asNondeterministic** to disable determinism.
+  - Nondeterministic functions prevent Spark from making certain optimizations.
