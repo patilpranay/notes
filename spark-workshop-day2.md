@@ -97,3 +97,36 @@ res2: org.apache.spark.sql.Column = id
 2. Always use Parquet instead of CSV or JSON
 3. Always use HDFS
 4. Always use Scala
+
+## Spark Core
+- `SparkContext` is the entrypoint to Spark services.
+  - Manages the connection to a Spark execution environment.
+  - Execution environment defined by URL to Spark master.
+- Stay away from RDDs unless you know what you are doing.
+
+### Resilient Distributed Dataset
+- The main data abstraction
+- It can survive failures. Spark knows how to recover from failure.
+- Distributed because Spark spreads out tasks on a single dataset across multiple workers.
+- Almost all operations on a RDD creates another RDD.
+- RDD is an abstract class with the following properties:
+  - Dependencies - parent RDDs if any
+  - Partitions
+  - **compute** function: Partition => Iterator[T]
+  - Optional **Partitioner** to define key hashing (hash, range)
+  - Optional **preferred locations** for locality information
+- Partitions are buckets and the partitioner decides what data gets placed in what bucket
+- Partitions are logical buckets for data.
+  - Partitions correspond to Hadoop splits if the data lives on HDFS.
+- RDD is partitioned.
+- Sparm manages data using partitions. Partitions help to create tasks which are then executed (relationship between partitions and tasks is 1 to 1).
+- RDD Operators
+  - **Transformation** is a lazy RDD operator that create one or many RDDs
+  - **Action** is a RDD operation that produces non-RDD Scala values
+- **Shuffle** is Spark's way to re-distribute data so that it's grouped differently across partitions
+
+### Other Core Concepts
+- A **DAGScheduler** creates a plan after an action is performed on an RDD.
+- A **job** is made up of actions on one or more partitions. Spark will not create jobs for 0 partitions.
+- After you perform an action on a RDD, a Job is created. This leads to a **Stage**, which contains **tasks** for the action on every partition. (Remember, partitions and tasks are always 1 to 1.)
+- If two sequential RDDs share the same partitioner and the same number of partitions, then the resulting tasks can be combined into one stage.
