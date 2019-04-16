@@ -155,6 +155,6 @@ object HelloWorld extends App {
   - When you provide the schema, there is no action to be done. Thus, there is no entry for the job on the UI.
 - Spark always nulls all the incorrect values (based on the provided schema)
 - Ad-hoc local dataset commands
-  - `Seq(...).toDF("col1", "col2", ...)
-  - `Seq(...).toDS(...)
+  - `Seq(...).toDF("col1", "col2", ...)`
+  - `Seq(...).toDS(...)`
   - Local because you created the sequence locally so that data is already in memory
