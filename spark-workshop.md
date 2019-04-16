@@ -79,7 +79,7 @@
 ### Description of Internals
 - RDD and DataFrames are both descriptions of distributed computations.
   - In Scala, we have Dataset (not DataFrame)
-  - Relationship between Task and Partition is 1 to 1
+  - Relationship between Task and Partition is 1 to 1 (always)
   - Relationship between RDD and DataFrame is 1 to 1
   - Relationship between RDD and Partition is 1 to 1+* (1 to many)
   - Relationship between DataFrame and Partition is 1 to 1+* (1 to many)
@@ -88,6 +88,29 @@
   - Its assumed that when you start Spark on a set of machines, then all of these machines are owned by Spark
 - Spark is so focused on supporting 4 different languages because lots of people can only code in one language.
 - You can extend Spark to make it faster by adding data specific code.
+- Tasks are independent entities.
+- A stage consists of tasks. Only a single stage can be running at a time in a Spark application.
+```
+            S1: 3 tasks
+           /           \
+S2: 4 tasks             S3: 8 tasks
+           \           /
+           S4: 200 tasks
+```
+- Spark is the one that determines what are the different stages and how they are split up. Stage 2 and Stage 3 can never be run at the same time.
+- If there are no additional data partitions, would every stage contain the same number of tasks?
+```
+\\ ds3 is some type of dataframe
+
+val dses = ds3.randomSplit(array(0.3, 0.7))
+dses: Array[org.apache.spark.sql.Dataset[Long]] = Array([id: bigint], [id: bigint])
+
+scala> dses(0).rdd.getNumPartitions
+res1: Int = 3
+
+scala> dses(1).rdd.getNumPartitions
+res2: Int = 3
+```
 
 ### Determining Partitions
 - Spark talks with the distributed filesystem (like HDFS) to figure out how the data is chunked in order to determine how many partitions to make.
