@@ -22,7 +22,7 @@ object FlatMapExample extends App {
 
   println(result.show())
 
-  // Using for comprehension logic.
+  // Use for comprehension logic to achieve the same result - more readable.
   val ds = for {
     ns <- nums.as[Seq[Int]]
     n  <- ns
