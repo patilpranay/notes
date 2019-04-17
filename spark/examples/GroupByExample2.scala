@@ -1,7 +1,7 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
-object UdfExample extends App {
+object GroupByExample2 extends App {
   /* https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/exercises/spark-sql-exercise-Collect-values-per-group.md */
 
   val spark = SparkSession
@@ -14,7 +14,9 @@ object UdfExample extends App {
 
   nums.show
 
-  val df1 = nums.groupBy($"group").agg(collect_list($"id") as "ids")
+  val df1 = nums
+    .groupBy($"group")
+    .agg(sort_array(collect_list($"id"), false) as "ids")
 
   df1.show
 }

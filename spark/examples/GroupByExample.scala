@@ -1,7 +1,7 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
-object UdfExample extends App {
+object GroupByExample extends App {
   /* https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/exercises/spark-sql-exercise-Finding-maximum-values-per-group-groupBy.md */
 
   val spark = SparkSession
