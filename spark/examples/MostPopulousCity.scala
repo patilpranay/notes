@@ -1,5 +1,6 @@
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import org.apache.spark.sql.expressions.Window
 
 object MostPopulousCity extends App {
   /* https://github.com/jaceklaskowski/spark-workshop/blob/gh-pages/exercises/spark-sql-exercise-Finding-Most-Populated-Cities-Per-Country.md */
@@ -33,4 +34,16 @@ object MostPopulousCity extends App {
   val cities5 = cities4.select($"name", cities2("country"), $"population")
 
   cities5.show
+
+  /* Completing same exercise using window aggregate functions. */
+  val countries = Window
+    .partitionBy("country")
+    .orderBy((translate($"population", " ", "") cast "long").desc)
+
+  val cities6 = cities
+    .withColumn("rank", rank over countries)
+    .filter($"rank" === 1)
+    .drop("rank")
+
+  cities6.show
 }
