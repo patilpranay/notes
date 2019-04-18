@@ -142,3 +142,35 @@ q.debugCodegen
 ### Tungsten Execution Backend
 - Used for optimizing Spark jobs for CPU and memory efficiency
 - Assumed that network and disk I/O are not performance bottlenecks
+
+## Caching and Persistence
+- Persisting (or caching) a dataset in memory or disk for faster (local to the executors) access
+- `Dataset.cache` persists the Dataset with the default `MEMORY_AND_DISK` storage level
+- `Dataset.persist` persists the Dataset with a given storage level
+- `Dataset.unpersist` un-persist (removes) any cached block data from memory and disk
+- `cache` and `persist` are lazy operators
+  - Quick fix to immediately cache is to use `count` right after `cache` since `count` is an action
+- Dataset turns into an RDD at execution time
+- Persisting a Dataset boils down to persisting the RDD
+- RDD blocks are stored on executors only
+- Every executor has exactly one BlockManager
+  - BlockManager is a key-value store of blocks of data
+- **StorageLevel** describes how block data of an RDD should be stored
+  - `useDisk`
+  - `useMemory`
+  - `useOffHeap`
+  - `deserialized`
+  - `replication` (default: 1)
+    - Increase replication whenever you are worried about the stability of your executors
+    - You usually want to increase replication so you don't lose a cached result that only exists on a single executor
+- Predefined storage levels
+  - `MEMORY_ONLY` - If some data doesn't fit in memory, that data will not be cached.
+  - `MEMORY_AND_DISK` - If some data doesn't fit in memory, the data will be stored on disk.
+- You can take a look at memory usage using the Web UI's storage tab.
+  - This tab has always existed.
+- **CacheManager** is an in-memory cache (registry) of structured queries (by their logical plans)
+  - Shared across SparkSessions through SharedState
+  - Available as `spark.sharedState.cacheManager`
+  - Spark developers interact with CacheManager using Dataset operators (cache, persist, and unpersist)
+  - Different spark sessions can access the same cache
+- If underlying data behind cached data changes, your cached data will be stale. Remember this!
