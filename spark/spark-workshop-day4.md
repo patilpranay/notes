@@ -4,7 +4,20 @@
 - Most basic level of execution is the task
 - Views and tables are only representations of external data
   - Spark unifies access to external data by using views and tables
-  
+
+## Scala Tidbits
+```scala
+// Incomplete
+val ids = input.rdd.zipWithIndex  // Need to rely on RDDs
+ids
+  .as("left")
+  .join(ids.as("right"))
+  .where($"left.id" === $"right.id" + 1)
+  .select("left.c", "right.c", "left.id")
+  .orderBy($"left.id")
+  .show
+```
+
 ### RDD Lineage
 - Example RDD Lineage
   - You have input RDD
@@ -174,3 +187,39 @@ q.debugCodegen
   - Spark developers interact with CacheManager using Dataset operators (cache, persist, and unpersist)
   - Different spark sessions can access the same cache
 - If underlying data behind cached data changes, your cached data will be stale. Remember this!
+
+## Window Aggregate Functions
+- Perform a calculation over a group of records called **window** that are in *some* relation to the current record
+- Generate a value for **every row**
+  - Unlike basic aggregation that generates **at most** the number of input rows
+- Examples
+  - Ranking functions
+  - Analytic functions
+  - Aggregate functions
+
+### Window Specification
+- Defines a **window** that includes the rows that are in relation to the current row (for every row)
+- (Logically) **partitions** dataset into groups
+  - `partitionBy`
+- May define **frame boundary**
+  - `rangeBetween`
+  - `rowsBetween`
+```scala
+import org.apache.spark.sql.expressions.Window
+val departmentById = Window
+  .partitionBy("department")
+  .orderBy("id")
+  .rangeBetween(Window.unboundedPreceding, Window.unboundedFollowing)
+```
+
+### Over Column Operator
+- `over` column operator defines a **windowing column** (aka **analytic clause**)
+- Applies window function over window
+```scala
+val overUnspecifiedFrame = sum('someColumn).over()
+val overRange = rank over someWindow
+```
+- Use with `withColumn` or `select` operators
+```scala
+numbers.withColumn("max", max("num") over dividedBy2)
+```
