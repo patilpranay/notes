@@ -1,4 +1,8 @@
-// Don't need to import anything belonging to java.lang.*
+/* Don't need to import anything belonging to java.lang.*
+ *
+ * Compile: javac Examples.java
+ * Run: java Examples
+ */
 
 public class Examples {
 
