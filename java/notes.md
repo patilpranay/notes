@@ -19,3 +19,10 @@ However, it is a good idea to declare them anyways since it makes reading APIs
 and accompanying documentation easier to read.
 
 [Source][https://stackoverflow.com/questions/22996407/java-throws-runtimeexception]
+
+### What is DAO?
+DAO refers to the Data Access Object pattern. This pattern allows us to isolate
+the application/business layer from the persistence layer (usually a relational
+database).
+
+[Source][https://www.baeldung.com/java-dao-pattern]
