@@ -1,0 +1,1 @@
+- Actions, Action-Creators, Reducers, Thunks explained - https://daveceddia.com/what-is-a-thunk/
