@@ -14,3 +14,6 @@ A guide on how to both download your data from Google and delete it from their s
 
 * [How To Write a Git Commit Message](https://chris.beams.io/posts/git-commit) -
 Instructions on how to write good commit messages.
+
+* [Another terminal guide](https://lucasfcosta.com/2019/02/10/terminal-guide-2019.html) -
+"How I'm still not using GUIs: A guide to the terminal"
