@@ -17,3 +17,15 @@ Instructions on how to write good commit messages.
 
 * [Another terminal guide](https://lucasfcosta.com/2019/02/10/terminal-guide-2019.html) -
 "How I'm still not using GUIs: A guide to the terminal"
+
+* [API Design](https://pages.apigee.com/rs/apigee/images/api-design-ebook-2012-03.pdf) -
+Crafting Interfaces that Developers Love
+
+* [How to Share a Secret](https://web.mit.edu/6.857/OldStuff/Fall03/ref/Shamir-HowToShareASecret.pdf) -
+Short, interesting research paper
+
+* [(Almost) Every infrastructure decision I endorse or regret after 4 years running infrastructure at a startup](https://cep.dev/posts/every-infrastructure-decision-i-endorse-or-regret-after-4-years-running-infrastructure-at-a-startup/) -
+Overview of good and bad infrastructure decisions made at a startup
+
+* [Spreadsheets are all you need](https://spreadsheets-are-all-you-need.ai/index.html) -
+A no-code way to learn AI
