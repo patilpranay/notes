@@ -25,7 +25,7 @@ Crafting Interfaces that Developers Love
 Short, interesting research paper
 
 * [(Almost) Every infrastructure decision I endorse or regret after 4 years running infrastructure at a startup](https://cep.dev/posts/every-infrastructure-decision-i-endorse-or-regret-after-4-years-running-infrastructure-at-a-startup/) -
-Overview of good and bad infrastructure decisions made at a startup
+As the title states
 
 * [Spreadsheets are all you need](https://spreadsheets-are-all-you-need.ai/index.html) -
 A no-code way to learn AI
